@@ -1,0 +1,25 @@
+// URL you get after deploying the Apps Script Web App
+const API_URL = 'https://script.google.com/macros/s/AKfycbxrwpSP4tELZoograI4O1-syy1nymg3zOhNFaEa2dMCEqHh6L5NBIoSTblqjUMwDv0Y9A/exec'; 
+
+async function loadForms() {
+  const response = await fetch(API_URL);
+  const formsData = await response.json();
+  
+  // Logic to render grouped categories
+  const container = document.getElementById('forms-container');
+  const grouped = formsData.reduce((acc, f) => {
+    (acc[f.category] = acc[f.category] || []).push(f);
+    return acc;
+  }, {});
+
+  for (const [cat, items] of Object.entries(grouped)) {
+    container.innerHTML += `<h3 class="font-bold text-lg mt-4">${cat}</h3>`;
+    items.forEach(f => {
+      container.innerHTML += `
+        <div class="p-2 border-b">
+          ${f.emoji} ${f.name}
+          <a href="${f.pdf}" target="_blank" class="text-blue-500">PDF</a>
+        </div>`;
+    });
+  }
+}
