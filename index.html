@@ -8,15 +8,15 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap');
     body { font-family: 'Noto Kufi Arabic', sans-serif; background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
-    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
-<body class="h-screen w-full flex flex-col md:flex-row overflow-hidden bg-white md:bg-transparent md:p-6 lg:p-10">
+<body class="h-screen w-full flex flex-col md:flex-row overflow-hidden bg-white md:bg-transparent md:p-6 lg:p-10 relative">
 
-  <div class="w-full h-full md:max-w-6xl md:mx-auto bg-white md:rounded-3xl md:shadow-2xl overflow-hidden flex flex-col md:flex-row border-slate-200 md:border">
+  <div class="w-full h-full md:max-w-7xl md:mx-auto bg-white md:rounded-3xl md:shadow-2xl overflow-hidden flex flex-col md:flex-row border-slate-200 md:border">
     
-    <div class="w-full md:w-5/12 border-l border-slate-100 flex flex-col h-full bg-slate-50 relative z-10">
+    <div class="w-full md:w-5/12 border-l border-slate-100 flex flex-col h-full bg-slate-50 z-10">
       
       <div class="p-4 md:p-5 bg-white border-b border-slate-100 shadow-sm z-20 space-y-4">
         <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">📂 پۆرتاڵی فۆڕمەکان</h2>
@@ -31,55 +31,86 @@
         </div>
       </div>
 
-      <div id="list-container" class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar pb-64 md:pb-4">
+      <div id="list-container" class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
         <div class="text-center py-10 text-slate-400 text-sm flex flex-col items-center gap-2">
            <svg class="animate-spin h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
            بارکردن...
         </div>
       </div>
-
-      <div id="email-widget" class="absolute md:relative bottom-0 left-0 w-full p-4 md:p-5 bg-white border-t border-slate-200 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 transform translate-y-full md:translate-y-0">
-        <div class="flex justify-between items-center mb-3 md:hidden cursor-pointer" onclick="toggleMobileWidget()">
-           <h4 class="text-sm font-bold text-slate-700">✉️ ناردنی فۆڕم</h4>
-           <span class="text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full text-xs">داخستن</span>
-        </div>
-
-        <div class="flex gap-1 bg-slate-100 p-1 rounded-lg mb-3">
-          <button onclick="switchSendMode('custom')" id="mode-custom" class="flex-1 py-2 text-xs font-bold rounded-md bg-white text-blue-600 shadow-sm transition">ئیمەیلی خۆت</button>
-          <button onclick="switchSendMode('dept')" id="mode-dept" class="flex-1 py-2 text-xs font-bold rounded-md text-slate-500 transition hidden">بەشەکان</button>
-        </div>
-
-        <div id="area-custom" class="space-y-2 mb-3">
-          <input type="email" id="input-custom-email" dir="ltr" placeholder="example@email.com" class="w-full px-3 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500 text-left">
-        </div>
-
-        <div id="area-dept" class="space-y-2 hidden mb-3">
-          <select id="dept-selector" class="w-full px-3 py-3 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none"></select>
-          <div id="code-area" class="hidden">
-            <input type="password" id="access-code" placeholder="کۆدی دەستگەیشتن" dir="ltr" class="w-full px-3 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none text-left">
-          </div>
-        </div>
-
-        <button onclick="submitEmail()" class="w-full bg-blue-600 active:bg-blue-800 md:hover:bg-blue-700 text-white text-sm font-bold py-3.5 rounded-xl transition shadow-md flex justify-center items-center">
-          <span id="send-btn-text">ناردنی فۆڕمی دەستنیشانکراو</span>
-        </button>
-        <div id="action-status" class="text-xs text-center font-bold mt-2 min-h-[16px]"></div>
-      </div>
     </div>
 
-    <div class="hidden md:flex flex-1 flex-col h-full bg-slate-800 text-white justify-center items-center">
-      <div id="preview-placeholder" class="text-slate-400 space-y-3 text-center p-6">
-        <span class="text-6xl block opacity-50">📄</span>
-        <p class="text-lg font-semibold">فۆڕمێک دیاری بکە بۆ پێشبینیکردن</p>
+    <div class="hidden md:flex flex-1 flex-col h-full bg-slate-100 relative">
+      <div id="desktop-preview-header" class="hidden p-4 bg-white border-b border-slate-200 flex justify-between items-center shadow-sm z-10">
+        <h3 id="desktop-preview-title" class="font-bold text-slate-800 text-lg truncate pr-2"></h3>
+        <button onclick="openSendModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-md transition flex items-center gap-2">
+          ناردنی ئەم فۆڕمە ✉️
+        </button>
       </div>
-      <iframe id="viewer-frame" class="w-full h-full hidden rounded-r-3xl" src="" frameborder="0"></iframe>
+
+      <div class="flex-1 w-full bg-slate-800 flex items-center justify-center relative">
+        <div id="preview-placeholder" class="text-slate-400 space-y-3 text-center p-6 absolute">
+          <span class="text-6xl block opacity-50">📄</span>
+          <p class="text-lg font-semibold">فۆڕمێک دیاری بکە بۆ پێشبینیکردن</p>
+        </div>
+        <iframe id="viewer-frame" class="w-full h-full hidden rounded-br-3xl" src="" frameborder="0"></iframe>
+      </div>
     </div>
 
   </div>
 
-  <button id="mobile-send-trigger" onclick="toggleMobileWidget()" class="md:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white shadow-[0_10px_25px_-5px_rgba(37,99,235,0.6)] px-6 py-3.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all translate-y-24">
-    ناردنی فۆڕم بە ئیمەیل ✉️
-  </button>
+  <div id="mobile-preview-modal" class="fixed inset-0 bg-slate-900 z-[60] flex flex-col transition-transform duration-300 transform translate-y-full md:hidden">
+    <div class="flex justify-between items-center p-4 bg-slate-800 text-white shadow-md z-10">
+      <h3 class="text-sm font-bold truncate pr-2 flex-1" id="mobile-preview-title">پێشبینیکردنی فۆڕم</h3>
+      <button onclick="closeMobilePreview()" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-xs font-bold transition flex-shrink-0">داخستن ✕</button>
+    </div>
+    <div class="flex-1 w-full bg-slate-100 overflow-hidden relative">
+      <iframe id="mobile-viewer-frame" class="w-full h-full absolute inset-0" src="" frameborder="0"></iframe>
+    </div>
+    <div class="p-4 bg-white border-t border-slate-200 z-10">
+      <button onclick="closeMobilePreviewAndOpenSend()" class="w-full bg-blue-600 active:bg-blue-800 text-white text-sm font-bold py-3.5 rounded-xl shadow-md">
+        ناردنی ئەم فۆڕمە ✉️
+      </button>
+    </div>
+  </div>
+
+  <div id="send-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="send-modal-content">
+      
+      <div class="bg-slate-50 p-4 border-b border-slate-200 flex justify-between items-center">
+        <h3 class="font-bold text-slate-800 text-lg">✉️ پەنجەرەی ناردن</h3>
+        <button onclick="closeSendModal()" class="text-slate-400 hover:text-red-500 bg-slate-200 hover:bg-red-50 w-8 h-8 rounded-full flex items-center justify-center transition font-bold">✕</button>
+      </div>
+      
+      <div class="p-5 space-y-5">
+        <div class="flex gap-1 bg-slate-100 p-1.5 rounded-xl">
+          <button onclick="switchSendMode('custom')" id="mode-custom" class="flex-1 py-2 text-sm font-bold rounded-lg bg-white text-blue-600 shadow-sm transition">ئیمەیلی خۆت</button>
+          <button onclick="switchSendMode('dept')" id="mode-dept" class="flex-1 py-2 text-sm font-bold rounded-lg text-slate-500 transition hidden">بەشەکان</button>
+        </div>
+
+        <div id="area-custom" class="space-y-2">
+          <label class="text-xs font-bold text-slate-500 px-1">ئیمەیلی وەرگر بنووسە</label>
+          <input type="email" id="input-custom-email" dir="ltr" placeholder="example@email.com" class="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-left bg-slate-50 focus:bg-white transition">
+        </div>
+
+        <div id="area-dept" class="space-y-4 hidden">
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-500 px-1">بەشی پەیوەندیدار هەڵبژێرە</label>
+            <select id="dept-selector" class="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none transition"></select>
+          </div>
+          <div id="code-area" class="hidden space-y-2">
+            <label class="text-xs font-bold text-slate-500 px-1">کۆدی دەستگەیشتن (نهێنی)</label>
+            <input type="password" id="access-code" placeholder="کۆد لێرە بنووسە..." dir="ltr" class="w-full px-4 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500 text-left bg-slate-50 focus:bg-white transition">
+          </div>
+        </div>
+
+        <div id="action-status" class="text-sm text-center font-bold min-h-[20px]"></div>
+        
+        <button onclick="submitEmail()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-500/30 flex justify-center items-center">
+          <span id="send-btn-text">بەردەوام بە بۆ ناردن</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // ⚠️ دڵنیابە لە دانانی لینکی دروستی WEB APP ی خۆت لێرە
@@ -97,7 +128,6 @@
         const res = await fetch(API_ENDPOINT);
         globalData = await res.json();
         
-        // Show Dept tab if enabled by admin
         if(globalData.settings.Enable_Dept_Email === "Yes") {
           document.getElementById('mode-dept').classList.remove('hidden');
           const selector = document.getElementById('dept-selector');
@@ -122,29 +152,32 @@
 
     function switchSendMode(mode) {
       currentSendMode = mode;
+      document.getElementById('mode-custom').className = mode === 'custom' ? 'flex-1 py-2 text-sm font-bold rounded-lg bg-white text-blue-600 shadow-sm transition' : 'flex-1 py-2 text-sm font-bold rounded-lg text-slate-500 transition hover:bg-slate-200/50';
+      document.getElementById('mode-dept').className = mode === 'dept' ? 'flex-1 py-2 text-sm font-bold rounded-lg bg-white text-blue-600 shadow-sm transition' : 'flex-1 py-2 text-sm font-bold rounded-lg text-slate-500 transition hover:bg-slate-200/50';
       
-      // Styling toggles
-      document.getElementById('mode-custom').className = mode === 'custom' ? 'flex-1 py-2 text-xs font-bold rounded-md bg-white text-blue-600 shadow-sm transition' : 'flex-1 py-2 text-xs font-bold rounded-md text-slate-500 transition';
-      document.getElementById('mode-dept').className = mode === 'dept' ? 'flex-1 py-2 text-xs font-bold rounded-md bg-white text-blue-600 shadow-sm transition' : 'flex-1 py-2 text-xs font-bold rounded-md text-slate-500 transition';
-      
-      // Content visibility
       document.getElementById('area-custom').classList.toggle('hidden', mode !== 'custom');
       document.getElementById('area-dept').classList.toggle('hidden', mode !== 'dept');
     }
 
-    function toggleMobileWidget() {
-      const widget = document.getElementById('email-widget');
-      const trigger = document.getElementById('mobile-send-trigger');
+    function openSendModal() {
+      const modal = document.getElementById('send-modal');
+      const content = document.getElementById('send-modal-content');
+      document.getElementById('action-status').innerText = ""; // clear old statuses
       
-      if (widget.classList.contains('translate-y-full')) {
-        widget.classList.remove('translate-y-full');
-        widget.classList.add('translate-y-0');
-        trigger.classList.add('translate-y-24');
-      } else {
-        widget.classList.add('translate-y-full');
-        widget.classList.remove('translate-y-0');
-        if(selectedFormId !== null) trigger.classList.remove('translate-y-24');
-      }
+      modal.classList.remove('hidden');
+      // trigger reflow for smooth animation
+      void modal.offsetWidth; 
+      modal.classList.remove('opacity-0');
+      content.classList.remove('scale-95');
+    }
+
+    function closeSendModal() {
+      const modal = document.getElementById('send-modal');
+      const content = document.getElementById('send-modal-content');
+      
+      modal.classList.add('opacity-0');
+      content.classList.add('scale-95');
+      setTimeout(() => { modal.classList.add('hidden'); }, 300);
     }
 
     function renderFormsList() {
@@ -172,40 +205,63 @@
 
     function createFormHTML(f) {
       const isActive = selectedFormId === f.id ? 'border-blue-500 bg-blue-50 shadow-sm scale-[1.01]' : 'border-slate-200 bg-white hover:border-slate-300';
+      const safeName = f.name.replace(/'/g, "\\'").replace(/"/g, '\\"');
       return `
-        <div onclick="selectForm(${f.id}, '${f.pdf}')" class="p-3 md:p-4 border rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 cursor-pointer transition-all duration-200 ${isActive}">
+        <div onclick="selectForm(${f.id}, '${f.pdf}', '${safeName}')" class="p-3 md:p-4 border rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 cursor-pointer transition-all duration-200 ${isActive}">
           <div class="flex items-center gap-3 overflow-hidden">
             <span class="text-2xl bg-white w-10 h-10 flex items-center justify-center rounded-xl shadow-sm border border-slate-100 flex-shrink-0">${f.emoji || '📄'}</span>
             <span class="text-sm font-bold text-slate-700 leading-tight">${f.name}</span>
           </div>
           <div class="flex gap-2 flex-shrink-0" onclick="event.stopPropagation();">
-            <a href="${f.pdf}" target="_blank" class="flex-1 text-center px-4 py-2 text-xs bg-red-50 text-red-600 font-bold rounded-xl active:bg-red-100 md:hover:bg-red-100 transition">PDF داگرتن</a>
-            ${f.word ? `<a href="${f.word}" target="_blank" class="flex-1 text-center px-4 py-2 text-xs bg-blue-50 text-blue-600 font-bold rounded-xl active:bg-blue-100 md:hover:bg-blue-100 transition">Word</a>` : ''}
+            <a href="${f.pdf}" target="_blank" class="flex-1 text-center px-4 py-2 text-xs bg-red-50 text-red-600 font-bold rounded-xl active:bg-red-100 hover:bg-red-100 transition">PDF داگرتن</a>
+            ${f.word ? `<a href="${f.word}" target="_blank" class="flex-1 text-center px-4 py-2 text-xs bg-blue-50 text-blue-600 font-bold rounded-xl active:bg-blue-100 hover:bg-blue-100 transition">Word</a>` : ''}
           </div>
         </div>`;
     }
 
-    function filterForms() { renderFormsList(); }
-
-    function selectForm(id, pdfUrl) {
+    function selectForm(id, pdfUrl, formName) {
       selectedFormId = id;
-      renderFormsList();
+      renderFormsList(); // highlight active
       
-      // Desktop Preview
+      const embedUrl = pdfUrl.replace('/view', '/preview');
+
+      // Desktop Preview Logic
       if (window.innerWidth >= 768) {
         document.getElementById('preview-placeholder').classList.add('hidden');
         const frame = document.getElementById('viewer-frame');
-        frame.classList.remove('hidden');
-        frame.src = pdfUrl.replace('/view', '/preview');
-      } else {
-        // Mobile Action: Show the Send trigger button
-        document.getElementById('mobile-send-trigger').classList.remove('translate-y-24');
         
-        // Hide widget if it was open
-        const widget = document.getElementById('email-widget');
-        widget.classList.add('translate-y-full');
-        widget.classList.remove('translate-y-0');
+        document.getElementById('desktop-preview-title').innerText = formName;
+        document.getElementById('desktop-preview-header').classList.remove('hidden');
+        document.getElementById('desktop-preview-header').classList.add('flex');
+        
+        frame.classList.remove('hidden');
+        frame.src = embedUrl;
+      } 
+      // Mobile Preview Logic
+      else {
+        const modal = document.getElementById('mobile-preview-modal');
+        const frame = document.getElementById('mobile-viewer-frame');
+        
+        document.getElementById('mobile-preview-title').innerText = formName;
+        frame.src = embedUrl;
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => { modal.classList.remove('translate-y-full'); }, 10);
       }
+    }
+
+    function closeMobilePreview() {
+      const modal = document.getElementById('mobile-preview-modal');
+      modal.classList.add('translate-y-full');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        document.getElementById('mobile-viewer-frame').src = "";
+      }, 300);
+    }
+
+    function closeMobilePreviewAndOpenSend() {
+      closeMobilePreview();
+      setTimeout(() => { openSendModal(); }, 350);
     }
 
     async function submitEmail() {
@@ -213,8 +269,8 @@
       const btnText = document.getElementById('send-btn-text');
       
       if(selectedFormId === null) {
-        status.className = "text-xs text-center font-bold mt-2 text-red-500";
-        status.innerText = "سەرەتا فۆڕمێک لە لیستەکە دیاری بکە!";
+        status.className = "text-sm text-center font-bold text-red-500";
+        status.innerText = "سەرەتا فۆڕمێک دیاری بکە!";
         return;
       }
 
@@ -223,7 +279,7 @@
       if (currentSendMode === 'custom') {
         const email = document.getElementById('input-custom-email').value;
         if (!email.includes('@')) {
-           status.className = "text-xs text-center font-bold mt-2 text-red-500";
+           status.className = "text-sm text-center font-bold text-red-500";
            status.innerText = "ئیمەیلێکی ڕاستەقینە بنووسە!";
            return;
         }
@@ -243,19 +299,19 @@
         });
         const result = await res.json();
         
-        status.className = `text-xs text-center font-bold mt-2 ${result.success ? 'text-green-600' : 'text-red-500'}`;
+        status.className = `text-sm text-center font-bold ${result.success ? 'text-green-600' : 'text-red-500'}`;
         status.innerText = result.message;
         
         if(result.success) {
           if(document.getElementById('access-code')) document.getElementById('access-code').value = "";
           document.getElementById('input-custom-email').value = "";
-          setTimeout(() => { toggleMobileWidget(); status.innerText = ""; }, 2500);
+          setTimeout(() => { closeSendModal(); }, 2500); // Close automatically after success
         }
       } catch (err) {
-        status.className = "text-xs text-center font-bold mt-2 text-red-500";
+        status.className = "text-sm text-center font-bold text-red-500";
         status.innerText = "هەڵەیەک ڕوویدا، دڵنیابە لە هێڵی ئینتەرنێتەکەت.";
       } finally {
-        btnText.innerText = "ناردنی فۆڕمی دەستنیشانکراو";
+        btnText.innerText = "بەردەوام بە بۆ ناردن";
       }
     }
   </script>
