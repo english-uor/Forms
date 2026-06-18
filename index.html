@@ -2,71 +2,92 @@
 <html lang="ku" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سیستەمی پێشبینینی فۆڕمە فەرمییەکان</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>فۆڕمە فەرمییەکان</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@300;400;600;700&display=swap');
-    body { font-family: 'Noto Kufi Arabic', sans-serif; background-color: #f8fafc; }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    body { font-family: 'Noto Kufi Arabic', sans-serif; background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
+<body class="h-screen w-full flex flex-col md:flex-row overflow-hidden bg-white md:bg-transparent md:p-6 lg:p-10">
 
-  <div class="w-full max-w-6xl bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col md:flex-row h-[85vh]">
+  <div class="w-full h-full md:max-w-6xl md:mx-auto bg-white md:rounded-3xl md:shadow-2xl overflow-hidden flex flex-col md:flex-row border-slate-200 md:border">
     
-    <div class="w-full md:w-5/12 border-l border-slate-100 flex flex-col h-full bg-slate-50/50">
+    <div class="w-full md:w-5/12 border-l border-slate-100 flex flex-col h-full bg-slate-50 relative z-10">
       
-      <div class="p-4 border-b border-slate-100 bg-white space-y-3">
+      <div class="p-4 md:p-5 bg-white border-b border-slate-100 shadow-sm z-20 space-y-4">
         <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">📂 پۆرتاڵی فۆڕمەکان</h2>
         
-        <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-lg">
-          <button id="btn-all-view" onclick="switchView('all')" class="py-1.5 px-3 rounded-md text-sm font-semibold transition bg-white text-blue-600 shadow-sm">هەموو فۆڕمەکان</button>
-          <button id="btn-cat-view" onclick="switchView('cat')" class="py-1.5 px-3 rounded-md text-sm font-semibold transition text-slate-600 hover:bg-slate-200/50">پۆلەکان</button>
+        <div class="grid grid-cols-2 gap-1 bg-slate-100 p-1.5 rounded-xl">
+          <button id="btn-all-view" onclick="switchMainView('all')" class="py-2 px-3 rounded-lg text-sm font-bold transition bg-white text-blue-600 shadow-sm">هەمووی</button>
+          <button id="btn-cat-view" onclick="switchMainView('cat')" class="py-2 px-3 rounded-lg text-sm font-bold transition text-slate-500 hover:bg-slate-200/50">پۆلەکان</button>
         </div>
 
-        <input type="text" id="search-bar" oninput="filterForms()" placeholder="گەڕان لە ناوی فۆڕمدا بکە..." class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+        <div class="relative">
+          <input type="text" id="search-bar" oninput="filterForms()" placeholder="بگەڕێ بۆ فۆڕم..." class="w-full px-4 py-3 pl-10 text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition">
+        </div>
       </div>
 
-      <div id="list-container" class="flex-1 overflow-y-auto p-4 custom-scrollbar">
-        <div class="text-center py-8 text-slate-400">خەریکی بارکردنی زانیارییەکانە...</div>
+      <div id="list-container" class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar pb-64 md:pb-4">
+        <div class="text-center py-10 text-slate-400 text-sm flex flex-col items-center gap-2">
+           <svg class="animate-spin h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+           بارکردن...
+        </div>
       </div>
 
-      <div id="dept-widget" class="hidden p-4 border-t border-slate-100 bg-white space-y-3">
-        <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100 space-y-2">
-          <h4 class="text-xs font-bold text-blue-800">✉️ ڕەوانەکردن بۆ بەشەکانی خوێندن</h4>
-          <select id="dept-selector" class="w-full px-3 py-2 text-xs rounded-md border border-slate-200 focus:outline-none bg-white"></select>
-          
+      <div id="email-widget" class="absolute md:relative bottom-0 left-0 w-full p-4 md:p-5 bg-white border-t border-slate-200 shadow-[0_-10px_20px_-5px_rgba(0,0,0,0.05)] transition-transform duration-300 transform translate-y-full md:translate-y-0">
+        <div class="flex justify-between items-center mb-3 md:hidden cursor-pointer" onclick="toggleMobileWidget()">
+           <h4 class="text-sm font-bold text-slate-700">✉️ ناردنی فۆڕم</h4>
+           <span class="text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full text-xs">داخستن</span>
+        </div>
+
+        <div class="flex gap-1 bg-slate-100 p-1 rounded-lg mb-3">
+          <button onclick="switchSendMode('custom')" id="mode-custom" class="flex-1 py-2 text-xs font-bold rounded-md bg-white text-blue-600 shadow-sm transition">ئیمەیلی خۆت</button>
+          <button onclick="switchSendMode('dept')" id="mode-dept" class="flex-1 py-2 text-xs font-bold rounded-md text-slate-500 transition hidden">بەشەکان</button>
+        </div>
+
+        <div id="area-custom" class="space-y-2 mb-3">
+          <input type="email" id="input-custom-email" dir="ltr" placeholder="example@email.com" class="w-full px-3 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-blue-500 text-left">
+        </div>
+
+        <div id="area-dept" class="space-y-2 hidden mb-3">
+          <select id="dept-selector" class="w-full px-3 py-3 text-sm rounded-xl border border-slate-200 bg-white focus:outline-none"></select>
           <div id="code-area" class="hidden">
-            <input type="password" id="access-code" placeholder="کۆدی دەستگەیشتن بنووسە" class="w-full px-3 py-1.5 text-xs rounded-md border border-slate-200 focus:outline-none">
+            <input type="password" id="access-code" placeholder="کۆدی دەستگەیشتن" dir="ltr" class="w-full px-3 py-3 text-sm rounded-xl border border-slate-200 focus:outline-none text-left">
           </div>
-
-          <button onclick="sendToDepartment()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 rounded-md transition shadow-sm flex justify-center items-center gap-2">
-            <span id="send-btn-text">ناردنی فۆڕمی دەستنیشانکراو</span>
-          </button>
-          <div id="action-status" class="text-[11px] text-center font-medium min-h-[16px]"></div>
         </div>
-      </div>
 
+        <button onclick="submitEmail()" class="w-full bg-blue-600 active:bg-blue-800 md:hover:bg-blue-700 text-white text-sm font-bold py-3.5 rounded-xl transition shadow-md flex justify-center items-center">
+          <span id="send-btn-text">ناردنی فۆڕمی دەستنیشانکراو</span>
+        </button>
+        <div id="action-status" class="text-xs text-center font-bold mt-2 min-h-[16px]"></div>
+      </div>
     </div>
 
-    <div class="hidden md:flex flex-1 flex-col h-full bg-slate-900 text-white relative justify-center items-center">
-      <div id="preview-placeholder" class="text-slate-400 space-y-2 text-center p-4">
-        <span class="text-4xl block">📄</span>
-        <p class="text-sm">تکایە فۆڕمێک دیاری بکە بۆ پێشبینیکردن</p>
+    <div class="hidden md:flex flex-1 flex-col h-full bg-slate-800 text-white justify-center items-center">
+      <div id="preview-placeholder" class="text-slate-400 space-y-3 text-center p-6">
+        <span class="text-6xl block opacity-50">📄</span>
+        <p class="text-lg font-semibold">فۆڕمێک دیاری بکە بۆ پێشبینیکردن</p>
       </div>
-      <iframe id="viewer-frame" class="w-full h-full hidden" src="" frameborder="0"></iframe>
+      <iframe id="viewer-frame" class="w-full h-full hidden rounded-r-3xl" src="" frameborder="0"></iframe>
     </div>
 
   </div>
 
+  <button id="mobile-send-trigger" onclick="toggleMobileWidget()" class="md:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white shadow-[0_10px_25px_-5px_rgba(37,99,235,0.6)] px-6 py-3.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all translate-y-24">
+    ناردنی فۆڕم بە ئیمەیل ✉️
+  </button>
+
   <script>
-    // Paste your Google Apps Script Web App URL exactly inside quotes below
-    const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbx4G6gUByxfFaoy5wKARLr0Pu3A6x0hukVCZcWs3d6DFozIr9ppa3iGbne7lpNXv7jnhg/exec";
+    // ⚠️ دڵنیابە لە دانانی لینکی دروستی WEB APP ی خۆت لێرە
+    const API_ENDPOINT = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
 
     let globalData = { forms: [], departments: [], settings: {} };
-    let currentActiveView = 'all';
+    let currentMainView = 'all';
+    let currentSendMode = 'custom';
     let selectedFormId = null;
 
     document.addEventListener("DOMContentLoaded", fetchInitialState);
@@ -76,110 +97,163 @@
         const res = await fetch(API_ENDPOINT);
         globalData = await res.json();
         
+        // Show Dept tab if enabled by admin
         if(globalData.settings.Enable_Dept_Email === "Yes") {
-          document.getElementById('dept-widget').classList.remove('hidden');
-          populateDepartments(globalData.departments);
+          document.getElementById('mode-dept').classList.remove('hidden');
+          const selector = document.getElementById('dept-selector');
+          selector.innerHTML = globalData.departments.map(d => `<option value="${d.email}">${d.name}</option>`).join('');
+          
           if(globalData.settings.Require_Code) {
             document.getElementById('code-area').classList.remove('hidden');
           }
         }
-        renderView();
+        renderFormsList();
       } catch (err) {
-        document.getElementById('list-container').innerHTML = `<div class="text-red-500 text-center text-xs">کێشەیەک لە پەیوەندی هەیە!</div>`;
+        document.getElementById('list-container').innerHTML = `<div class="text-red-500 font-bold text-center text-sm p-4">کێشە لە هێنانی داتاکان هەیە، پەیوەندی ئینتەرنێتەکەت بپشکنە!</div>`;
       }
     }
 
-    function populateDepartments(depts) {
-      const selector = document.getElementById('dept-selector');
-      selector.innerHTML = depts.map(d => `<option value="${d.email}">${d.name}</option>`).join('');
+    function switchMainView(viewType) {
+      currentMainView = viewType;
+      document.getElementById('btn-all-view').className = viewType === 'all' ? 'py-2 px-3 rounded-lg text-sm font-bold transition bg-white text-blue-600 shadow-sm' : 'py-2 px-3 rounded-lg text-sm font-bold transition text-slate-500 hover:bg-slate-200/50';
+      document.getElementById('btn-cat-view').className = viewType === 'cat' ? 'py-2 px-3 rounded-lg text-sm font-bold transition bg-white text-blue-600 shadow-sm' : 'py-2 px-3 rounded-lg text-sm font-bold transition text-slate-500 hover:bg-slate-200/50';
+      renderFormsList();
     }
 
-    function switchView(viewType) {
-      currentActiveView = viewType;
-      document.getElementById('btn-all-view').className = viewType === 'all' ? 'py-1.5 px-3 rounded-md text-sm font-semibold transition bg-white text-blue-600 shadow-sm' : 'py-1.5 px-3 rounded-md text-sm font-semibold transition text-slate-600 hover:bg-slate-200/50';
-      document.getElementById('btn-cat-view').className = viewType === 'cat' ? 'py-1.5 px-3 rounded-md text-sm font-semibold transition bg-white text-blue-600 shadow-sm' : 'py-1.5 px-3 rounded-md text-sm font-semibold transition text-slate-600 hover:bg-slate-200/50';
-      renderView();
+    function switchSendMode(mode) {
+      currentSendMode = mode;
+      
+      // Styling toggles
+      document.getElementById('mode-custom').className = mode === 'custom' ? 'flex-1 py-2 text-xs font-bold rounded-md bg-white text-blue-600 shadow-sm transition' : 'flex-1 py-2 text-xs font-bold rounded-md text-slate-500 transition';
+      document.getElementById('mode-dept').className = mode === 'dept' ? 'flex-1 py-2 text-xs font-bold rounded-md bg-white text-blue-600 shadow-sm transition' : 'flex-1 py-2 text-xs font-bold rounded-md text-slate-500 transition';
+      
+      // Content visibility
+      document.getElementById('area-custom').classList.toggle('hidden', mode !== 'custom');
+      document.getElementById('area-dept').classList.toggle('hidden', mode !== 'dept');
     }
 
-    function renderView() {
+    function toggleMobileWidget() {
+      const widget = document.getElementById('email-widget');
+      const trigger = document.getElementById('mobile-send-trigger');
+      
+      if (widget.classList.contains('translate-y-full')) {
+        widget.classList.remove('translate-y-full');
+        widget.classList.add('translate-y-0');
+        trigger.classList.add('translate-y-24');
+      } else {
+        widget.classList.add('translate-y-full');
+        widget.classList.remove('translate-y-0');
+        if(selectedFormId !== null) trigger.classList.remove('translate-y-24');
+      }
+    }
+
+    function renderFormsList() {
       const query = document.getElementById('search-bar').value.toLowerCase().trim();
       const filtered = globalData.forms.filter(f => f.name.toLowerCase().includes(query));
       const container = document.getElementById('list-container');
       
       if(filtered.length === 0) {
-        container.innerHTML = `<div class="text-center text-slate-400 text-xs py-6">هیچ فۆڕمێک نەدۆزرایەوە</div>`;
+        container.innerHTML = `<div class="text-center text-slate-400 font-bold text-sm py-10">فۆڕم نەدۆزرایەوە!</div>`;
         return;
       }
 
-      if (currentActiveView === 'all') {
-        container.innerHTML = `<div class="space-y-1">${filtered.map(f => createFormRow(f)).join('')}</div>`;
+      if (currentMainView === 'all') {
+        container.innerHTML = filtered.map(f => createFormHTML(f)).join('');
       } else {
         const groups = filtered.reduce((acc, f) => { (acc[f.category] = acc[f.category] || []).push(f); return acc; }, {});
         container.innerHTML = Object.entries(groups).map(([catName, items]) => `
-          <div class="mb-4">
-            <h3 class="text-xs font-bold text-slate-400 mb-2 sticky top-0 bg-slate-50 py-1 z-10">${catName}</h3>
-            <div class="space-y-1">${items.map(f => createFormRow(f)).join('')}</div>
+          <div class="mb-5">
+            <h3 class="text-xs font-bold text-slate-400 mb-2 sticky top-0 bg-slate-50/90 backdrop-blur-sm py-1 z-10">${catName}</h3>
+            <div class="space-y-2">${items.map(f => createFormHTML(f)).join('')}</div>
           </div>
         `).join('');
       }
     }
 
-    function createFormRow(f) {
-      const isActive = selectedFormId === f.id ? 'border-blue-500 bg-blue-50/40' : 'border-slate-100 bg-white hover:border-slate-300';
+    function createFormHTML(f) {
+      const isActive = selectedFormId === f.id ? 'border-blue-500 bg-blue-50 shadow-sm scale-[1.01]' : 'border-slate-200 bg-white hover:border-slate-300';
       return `
-        <div onclick="selectForm(${f.id}, '${f.pdf}')" class="p-3 border rounded-xl flex items-center justify-between cursor-pointer transition ${isActive}">
-          <div class="flex items-center gap-2 overflow-hidden">
-            <span class="text-lg flex-shrink-0">${f.emoji || '📄'}</span>
-            <span class="text-xs font-semibold text-slate-700 truncate">${f.name}</span>
+        <div onclick="selectForm(${f.id}, '${f.pdf}')" class="p-3 md:p-4 border rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 cursor-pointer transition-all duration-200 ${isActive}">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <span class="text-2xl bg-white w-10 h-10 flex items-center justify-center rounded-xl shadow-sm border border-slate-100 flex-shrink-0">${f.emoji || '📄'}</span>
+            <span class="text-sm font-bold text-slate-700 leading-tight">${f.name}</span>
           </div>
-          <div class="flex gap-1 flex-shrink-0" onclick="event.stopPropagation();">
-            <a href="${f.pdf}" target="_blank" class="px-2 py-1 text-[10px] bg-red-50 text-red-600 font-bold rounded-md hover:bg-red-100 transition">PDF</a>
-            ${f.word ? `<a href="${f.word}" target="_blank" class="px-2 py-1 text-[10px] bg-blue-50 text-blue-600 font-bold rounded-md hover:bg-blue-100 transition">Word</a>` : ''}
+          <div class="flex gap-2 flex-shrink-0" onclick="event.stopPropagation();">
+            <a href="${f.pdf}" target="_blank" class="flex-1 text-center px-4 py-2 text-xs bg-red-50 text-red-600 font-bold rounded-xl active:bg-red-100 md:hover:bg-red-100 transition">PDF داگرتن</a>
+            ${f.word ? `<a href="${f.word}" target="_blank" class="flex-1 text-center px-4 py-2 text-xs bg-blue-50 text-blue-600 font-bold rounded-xl active:bg-blue-100 md:hover:bg-blue-100 transition">Word</a>` : ''}
           </div>
         </div>`;
     }
 
-    function filterForms() { renderView(); }
+    function filterForms() { renderFormsList(); }
 
     function selectForm(id, pdfUrl) {
       selectedFormId = id;
-      renderView();
+      renderFormsList();
       
-      document.getElementById('preview-placeholder').classList.add('hidden');
-      const frame = document.getElementById('viewer-frame');
-      frame.classList.remove('hidden');
-      frame.src = pdfUrl.replace('/view', '/preview');
+      // Desktop Preview
+      if (window.innerWidth >= 768) {
+        document.getElementById('preview-placeholder').classList.add('hidden');
+        const frame = document.getElementById('viewer-frame');
+        frame.classList.remove('hidden');
+        frame.src = pdfUrl.replace('/view', '/preview');
+      } else {
+        // Mobile Action: Show the Send trigger button
+        document.getElementById('mobile-send-trigger').classList.remove('translate-y-24');
+        
+        // Hide widget if it was open
+        const widget = document.getElementById('email-widget');
+        widget.classList.add('translate-y-full');
+        widget.classList.remove('translate-y-0');
+      }
     }
 
-    async function sendToDepartment() {
+    async function submitEmail() {
       const status = document.getElementById('action-status');
       const btnText = document.getElementById('send-btn-text');
       
       if(selectedFormId === null) {
-        status.className = "text-[11px] text-center font-medium min-h-[16px] text-red-500";
-        status.innerText = "تکایە سەرەتا فۆڕمێک لە لیستی سەرەوە دیاری بکە";
+        status.className = "text-xs text-center font-bold mt-2 text-red-500";
+        status.innerText = "سەرەتا فۆڕمێک لە لیستەکە دیاری بکە!";
         return;
       }
 
-      const email = document.getElementById('dept-selector').value;
-      const code = document.getElementById('access-code') ? document.getElementById('access-code').value : "";
+      let payload = { formId: selectedFormId, sendType: currentSendMode };
 
-      btnText.innerText = "خەریکی پرۆسەسەکەیە...";
+      if (currentSendMode === 'custom') {
+        const email = document.getElementById('input-custom-email').value;
+        if (!email.includes('@')) {
+           status.className = "text-xs text-center font-bold mt-2 text-red-500";
+           status.innerText = "ئیمەیلێکی ڕاستەقینە بنووسە!";
+           return;
+        }
+        payload.targetEmail = email;
+      } else {
+        payload.targetEmail = document.getElementById('dept-selector').value;
+        payload.code = document.getElementById('access-code') ? document.getElementById('access-code').value : "";
+      }
+
+      btnText.innerText = "خەریکی ناردنە...";
       status.innerText = "";
 
       try {
         const res = await fetch(API_ENDPOINT, {
           method: "POST",
-          body: JSON.stringify({ formId: selectedFormId, deptEmail: email, code: code })
+          body: JSON.stringify(payload)
         });
         const result = await res.json();
         
-        status.className = `text-[11px] text-center font-medium min-h-[16px] ${result.success ? 'text-green-600' : 'text-red-500'}`;
+        status.className = `text-xs text-center font-bold mt-2 ${result.success ? 'text-green-600' : 'text-red-500'}`;
         status.innerText = result.message;
-        if(result.success && document.getElementById('access-code')) document.getElementById('access-code').value = "";
+        
+        if(result.success) {
+          if(document.getElementById('access-code')) document.getElementById('access-code').value = "";
+          document.getElementById('input-custom-email').value = "";
+          setTimeout(() => { toggleMobileWidget(); status.innerText = ""; }, 2500);
+        }
       } catch (err) {
-        status.className = "text-[11px] text-center font-medium min-h-[16px] text-red-500";
-        status.innerText = "هەڵەیەک لە سێرڤەر ڕوویدا";
+        status.className = "text-xs text-center font-bold mt-2 text-red-500";
+        status.innerText = "هەڵەیەک ڕوویدا، دڵنیابە لە هێڵی ئینتەرنێتەکەت.";
       } finally {
         btnText.innerText = "ناردنی فۆڕمی دەستنیشانکراو";
       }
