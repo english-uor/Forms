@@ -284,9 +284,22 @@
            return;
         }
         payload.targetEmail = email;
-      } else {
+} else {
         payload.targetEmail = document.getElementById('dept-selector').value;
-        payload.code = document.getElementById('access-code') ? document.getElementById('access-code').value : "";
+        const codeInput = document.getElementById('access-code');
+        const codeArea = document.getElementById('code-area');
+        
+        // پشکنین بۆ ئەوەی بزانین ئایا کۆد داواکراوە وە ئایا بەتاڵە؟
+        if (codeInput && !codeArea.classList.contains('hidden')) {
+          if (codeInput.value.trim() === "") {
+            status.className = "text-sm text-center font-bold text-red-500";
+            status.innerText = "تکایە کۆدی دەستگەیشتن بنووسە!";
+            return; // لێرەدا دەوەستێت و ڕێگە بە ناردنەکە نادات
+          }
+          payload.code = codeInput.value;
+        } else {
+          payload.code = "";
+        }
       }
 
       btnText.innerText = "خەریکی ناردنە...";
